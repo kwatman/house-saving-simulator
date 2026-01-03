@@ -23,9 +23,6 @@ importers:
       vue:
         specifier: ^3.5.18
         version: 3.5.20(typescript@5.8.3)
-      vue-apexcharts:
-        specifier: ^1.7.0
-        version: 1.7.0(apexcharts@5.3.4)(vue@3.5.20(typescript@5.8.3))
       vue3-apexcharts:
         specifier: ^1.8.0
         version: 1.8.0(apexcharts@5.3.4)(vue@3.5.20(typescript@5.8.3))
@@ -1271,12 +1268,6 @@ packages:
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
 
-  vue-apexcharts@1.7.0:
-    resolution: {integrity: sha512-QMpvBllJ1XvFsK4dwcbyxKalVpHfJnoqsNWszY55HJk/Sn7WP1f5YUv4JIzugqu4GTQB6gLcCVwwPDQFtwr0oQ==}
-    peerDependencies:
-      apexcharts: '>=4.0.0'
-      vue: ^2.5.17
-
   vue-tsc@3.0.6:
     resolution: {integrity: sha512-Tbs8Whd43R2e2nxez4WXPvvdjGbW24rOSgRhLOHXzWiT4pcP4G7KeWh0YCn18rF4bVwv7tggLLZ6MJnO6jXPBg==}
     hasBin: true
@@ -2427,11 +2418,6 @@ snapshots:
       lightningcss: 1.30.1
 
   vscode-uri@3.1.0: {}
-
-  vue-apexcharts@1.7.0(apexcharts@5.3.4)(vue@3.5.20(typescript@5.8.3)):
-    dependencies:
-      apexcharts: 5.3.4
-      vue: 3.5.20(typescript@5.8.3)
 
   vue-tsc@3.0.6(typescript@5.8.3):
     dependencies:
