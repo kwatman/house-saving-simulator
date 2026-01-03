@@ -19,12 +19,12 @@ const loanInterestRate = ref<number>(4);
 const maxMonthlyLoanCost = ref<number>(900);
 
 const interestRate = ref<number | null>(4);
-const alreadySaved = ref<Array<Array<[string, number]>> | null>(null);
+const alreadySaved = ref<Array<[string | number, number]> | null>(null);
 
 
 const totalSavedMonths = computed(() => {
-  if (!today.value || !lookAhead.value) return 0;
-  let data = [];
+  if (!today.value || !lookAhead.value) return { name: 'Saved', data: [] };
+  let data: [number, number][] = [];
   for (let i = 0; i <= lookAhead.value * 12; i++) {
     data.push([dayjs().add(i, 'month').valueOf(), (monthlySavings.value || 0) * i + (currentlySaved.value || 0)]);
   }
@@ -37,7 +37,7 @@ const totalSavedMonths = computed(() => {
 
 
 const enoughSavedBy = computed(() => {
-  const entry = totalSavedMonths.value.data.find(item => item[1] >= (housePrice.value || 0));
+  const entry = totalSavedMonths.value.data.find((item: number[]) => item[1] >= (housePrice.value || 0));
   if(!entry) return null;
   return entry?.[0];
 });
@@ -48,7 +48,7 @@ const toLoan = computed(() => {
 
 const ownInputReached = computed(() => {
   const amount = getPercentOf(ownInputPercent.value || 0, housePrice.value || 0);
-  const entry = totalSavedMonths.value.data.find(item => item[1] >= amount);
+  const entry = totalSavedMonths.value.data.find((item: number[]) => item[1] >= amount);
   if(!entry) return null;
   return entry?.[0];
 });
@@ -60,8 +60,8 @@ const loanPaidOffBy = computed(() => {
 });
 
 const monthlyLoanCost = computed(() => {
-  if (!housePrice.value || !loanTimeSpan.value || !interestRate.value) return null;
-  let data= []
+  if (!housePrice.value || !loanTimeSpan.value || !interestRate.value) return { name: 'Monthly Loan Cost', data: [] };
+  let data: [number, string][] = []
   for (let i = 0; i <= lookAhead.value * 12; i++) {
     if(dayjs().add(i, 'month').isBefore(ownInputReached.value)) continue;
     let savedByNow = totalSavedMonths.value.data[i][1];
@@ -80,7 +80,7 @@ const monthlyLoanCost = computed(() => {
 
 
 const actualSaved = computed(() => {
-  let parsedData = [];
+  let parsedData: [number, number][] = [];
   if (alreadySaved.value){ 
     for(const entry of alreadySaved.value){
       parsedData.push([dayjs(entry[0]).valueOf(), entry[1]]);
@@ -112,11 +112,11 @@ const avarageSaved = computed(() => {
     currentlySaved.value = alreadySaved.value[alreadySaved.value.length -1][1];
   }
 
-  return average.toFixed(0);
+  return Number(average.toFixed(0));
 });
 
 const totalSavedMonthsSimulatedAvarage = computed(() => {
-  let data = [];
+  let data: [number, number][] = [];
   if (alreadySaved.value){
     let startAmount =  alreadySaved.value[alreadySaved.value.length -1][1];
 
@@ -128,7 +128,7 @@ const totalSavedMonthsSimulatedAvarage = computed(() => {
     });
 
     for (let i = 0; i <= lookAhead.value * 12; i++) {
-      if(dayjs().add(i, 'month').isBefore(alreadySaved.value[alreadySaved.value.length - 1][0])) continue;
+      if(dayjs().add(i, 'month').isBefore(dayjs(alreadySaved.value[alreadySaved.value.length - 1][0]))) continue;
 
 
       data.push([
@@ -144,13 +144,13 @@ const totalSavedMonthsSimulatedAvarage = computed(() => {
 });
 
 const enoughSavedBySimulated = computed(() => {
-  const entry = totalSavedMonthsSimulatedAvarage.value.data.find(item => item[1] >= (housePrice.value || 0));
+  const entry = totalSavedMonthsSimulatedAvarage.value.data.find((item: number[]) => item[1] >= (housePrice.value || 0));
   if(!entry) return null;
   return entry?.[0];
 });
 
 const monthlyLoanCostSimulated = computed(() => {
-  let data= []
+  let data: [number, string][] = []
   if (housePrice.value && loanTimeSpan.value && interestRate.value && alreadySaved.value) {
     
     for (let i = 0; i <= lookAhead.value * 12; i++) {
@@ -172,21 +172,21 @@ const monthlyLoanCostSimulated = computed(() => {
 
 const ownInputReachedSimulated = computed(() => {
   const amount = getPercentOf(ownInputPercent.value || 0, housePrice.value || 0);
-  const entry = totalSavedMonthsSimulatedAvarage.value.data.find(item => item[1] >= amount);
+  const entry = totalSavedMonthsSimulatedAvarage.value.data.find((item: number[]) => item[1] >= amount);
   if(!entry) return null;
   return entry?.[0];
 });
 
 
 const maxMonthlyLoanCostReached = computed(() => {
-  const entry = monthlyLoanCost.value.data.find(item => Number(item[1]) <= (maxMonthlyLoanCost.value || 0));
+  const entry = monthlyLoanCost.value.data.find((item: [number, string]) => Number(item[1]) <= (maxMonthlyLoanCost.value || 0));
   if(!entry) return null;
   return entry?.[0];
 });
 
 
 const maxMonthlyLoanCostReachedSimulated = computed(() => {
-  const entry = monthlyLoanCostSimulated.value.data.find(item => Number(item[1]) <= (maxMonthlyLoanCost.value || 0));
+  const entry = monthlyLoanCostSimulated.value.data.find((item: [number, string]) => Number(item[1]) <= (maxMonthlyLoanCost.value || 0));
   if(!entry) return null;
   return entry?.[0];
 });
