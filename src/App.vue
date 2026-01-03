@@ -308,7 +308,7 @@ const chartOptions = computed(() => {
 
 <template>
   <!-- {{totalSavedMonthsSimulatedAvarage.data }} -->
-  <div class="grid grid-cols-[auto_1fr] min-h-screen max-h-screen">
+  <div class="grid md:grid-cols-[auto_1fr] md:min-h-screen md:max-h-screen">
     <div class="p-2 gap-4 border-r-1">
       <div class="bg-slate-300 border rounded-sm p-2">
         <table class="w-full text-sm">
@@ -389,7 +389,7 @@ const chartOptions = computed(() => {
         <Input label="Max monthly loan cost" type="number" v-model="maxMonthlyLoanCost" />
       </div>
     </div>
-    <div class="h-full min-h-0">
+    <div class="h-[500px] md:h-full min-h-0">
         <apexchart height="100%" width="100%" type="line" :options="chartOptions" :series="[totalSavedMonths,monthlyLoanCost,actualSaved,totalSavedMonthsSimulatedAvarage,monthlyLoanCostSimulated]"></apexchart>
     </div>
   </div>
