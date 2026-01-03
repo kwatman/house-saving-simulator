@@ -54,7 +54,6 @@ const loanPaidOffBy = computed(() => {
 
 
 const monthlyLoanCost = computed(() => {
-  // Check of de basiswaarden aanwezig zijn
   if (!housePrice.value || !loanTimeSpan.value || !loanInterestRate.value) 
     return { name: 'Monthly Loan Cost', data: [] };
 
@@ -92,6 +91,48 @@ const monthlyLoanCost = computed(() => {
     name: 'Monthly Loan Cost',
     data: data
   }
+});
+
+const monthlyLoanCostSimulated = computed(() => {
+  let data: [number, string][] = []
+  
+  // Check of alle nodige waarden er zijn
+  if (housePrice.value && loanTimeSpan.value && loanInterestRate.value && alreadySaved.value) {
+    
+    for (let i = 0; i <= lookAhead.value * 12; i++) {
+      // Let op: hier gebruik je 'ownInputReached'. 
+      // Als de simulatie sneller/trager spaart, wil je hier misschien 'ownInputReachedSimulated' gebruiken?
+      if(dayjs().add(i, 'month').isBefore(ownInputReached.value)) continue;
+      
+      let savedByNow = totalSavedMonthsSimulatedAvarage.value.data[i][1];
+      
+      // AANPASSING: Geen automatische kosten meer.
+      // We gaan ervan uit dat housePrice de totaalprijs is.
+      let principal = housePrice.value - savedByNow;
+      
+      if (principal < 0) principal = 0;
+
+      // Actuariële rentevoet (Belgische standaard)
+      let yearlyRateDecimal = loanInterestRate.value / 100;
+      let monthlyRate = Math.pow(1 + yearlyRateDecimal, 1/12) - 1;
+      let numberOfPayments = loanTimeSpan.value * 12;
+
+      let monthlyCost = 0;
+      if (monthlyRate > 0) {
+          let numerator = monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments);
+          let denominator = Math.pow(1 + monthlyRate, numberOfPayments) - 1;
+          monthlyCost = principal * (numerator / denominator);
+      } else {
+          monthlyCost = principal / numberOfPayments;
+      }
+
+      data.push([
+        dayjs().add(i, 'month').valueOf(),
+        monthlyCost.toFixed(2) // Consistent gemaakt met de gewone berekening (2 decimalen)
+      ]);
+    }
+  }
+  return { name: 'Monthly Loan Cost (simulation)', data: data }
 });
 
 const actualSaved = computed(() => {
@@ -133,38 +174,7 @@ const totalSavedMonthsSimulatedAvarage = computed(() => {
   return { name: 'Saved average (simulation)', data: data };
 });
 
-const monthlyLoanCostSimulated = computed(() => {
-  let data: [number, string][] = []
-  if (housePrice.value && loanTimeSpan.value && loanInterestRate.value && alreadySaved.value) {
-    
-    for (let i = 0; i <= lookAhead.value * 12; i++) {
-      if(dayjs().add(i, 'month').isBefore(ownInputReached.value)) continue;
-      
-      let savedByNow = totalSavedMonthsSimulatedAvarage.value.data[i][1];
-      
-      // Update: Kosten toevoegen
-      let buyingCosts = housePrice.value * (purchasingCostsPercent.value / 100);
-      let totalProjectPrice = housePrice.value + buyingCosts;
-      let principal = totalProjectPrice - savedByNow;
-      if (principal < 0) principal = 0;
 
-      // Update: Rente formule
-      let yearlyRateDecimal = loanInterestRate.value / 100;
-      let monthlyRate = Math.pow(1 + yearlyRateDecimal, 1/12) - 1;
-      let numberOfPayments = loanTimeSpan.value * 12;
-
-      let numerator = monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments);
-      let denominator = Math.pow(1 + monthlyRate, numberOfPayments) - 1;
-      let monthlyCost = principal * (numerator / denominator);
-
-      data.push([
-        dayjs().add(i, 'month').valueOf(),
-        monthlyCost.toFixed(0)
-      ]);
-    }
-  }
-  return { name: 'Monthly Loan Cost (simulation)', data: data }
-});
 
 //markers
 const ownInputReachedSimulated = computed(() => {
