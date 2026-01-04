@@ -228,9 +228,9 @@ const chartOptions = computed(() => {
 </script>
 
 <template>
-  <div class="grid md:grid-cols-[auto_1fr] md:min-h-screen md:max-h-screen">
-    <div class="p-2 gap-4 border-r-1">
-      <div class="bg-slate-300 border rounded-sm p-2">
+  <div class="grid md:grid-cols-[auto_1fr] md:min-h-screen md:max-h-screen overflow-hidden">
+    <div class="p-2 gap-4 border-r-1 overflow-y-auto max-h-screen">
+      <div class="bg-slate-300 border rounded-sm p-2 ">
         <table class="w-full text-sm">
           <tbody>
             <tr>
