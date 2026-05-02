@@ -13,7 +13,7 @@ const formatted = computed(() => {
         return new Intl.NumberFormat(navigator.language, {
             style: 'currency',
             currency: 'EUR',
-        }).format(props.value);
+        }).format(props.value as number);
     }
     return props.value;
 })
