@@ -11,23 +11,36 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --build"
+    "type-check": "vue-tsc --build",
+    "lint": "eslint . --fix",
+    "format": "prettier --write src/"
   },
   "dependencies": {
+    "@iconify/vue": "^5.0.0",
     "@tailwindcss/vite": "^4.1.12",
+    "@vueuse/core": "^14.3.0",
     "apexcharts": "^5.3.4",
     "dayjs": "^1.11.18",
+    "echarts": "^6.0.0",
     "tailwindcss": "^4.1.12",
     "vue": "^3.5.18",
     "vue3-apexcharts": "^1.8.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@tsconfig/node22": "^22.0.2",
     "@types/node": "^22.16.5",
     "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.7.0",
     "@vue/tsconfig": "^0.7.0",
+    "eslint": "^10.3.0",
+    "eslint-plugin-vue": "^10.9.0",
+    "jiti": "^2.6.1",
     "npm-run-all2": "^8.0.4",
+    "prettier": "^3.8.3",
     "typescript": "~5.8.0",
+    "typescript-eslint": "^8.59.1",
     "vite": "^7.0.6",
     "vite-plugin-vue-devtools": "^8.0.0",
     "vue-tsc": "^3.0.4"
